@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,8 +40,9 @@ public class MainActivity extends AppCompatActivity implements WXPayEntryActivit
     EditText amount, describe;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         initView();
         initData();
     }
@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements WXPayEntryActivit
             payBean.setDescribe(DEFAULT_DESCRIBE);
         }
         payBean.setTime(System.currentTimeMillis());
-        payBean.setNotify_url("notify_url");
+        payBean.setNotify_url(PayConstants.NOTIFY_URL);
         return payBean;
     }
 

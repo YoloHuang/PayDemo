@@ -8,6 +8,7 @@ import java.security.PrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -38,10 +39,9 @@ public class AliPayUtil {
         String orderParam = buildOrderParam(params);
         String privateKey = rsa2 ? PayConstants.RSA2_PRIVATE : PayConstants.RSA_PRIVATE;
         //签名，encode
-        String sign = getSign(orderParam, privateKey, rsa2);
+        String sign = getSign(params, privateKey, rsa2);
         //在订单信息后加入sign值,此时sign值已经拼接了sign=，不需要再进行拼接
-        final String orderInfo = orderParam + "&" + sign;
-        return orderInfo;
+        return orderParam + "&" + sign;
     }
 
     /**
@@ -62,15 +62,15 @@ public class AliPayUtil {
         /**
          * biz_content参数包括所有的订单信息
          */
-        keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + amount + "\",\"subject\":\"" + payBean.getBody() + "\",\"body\":\"我是测试数据\",\"out_trade_no\":\"" + getOutTradeNo() + "\"}");
+        keyValues.put("biz_content", "{\"timeout_express\":\"30m\",\"product_code\":\"QUICK_MSECURITY_PAY\",\"total_amount\":\"" + amount + "\",\"subject\":\"" + payBean.getDescribe() + "\",\"body\":\"我是测试数据\",\"out_trade_no\":\"" + getOutTradeNo() + "\"}");
 
         keyValues.put("charset", "utf-8");
 
         keyValues.put("method", "alipay.trade.app.pay");
 
-        keyValues.put("sign_type", rsa2 ? "RSA2" : "RSA");
-
         keyValues.put("notify_url", payBean.getNotify_url());
+
+        keyValues.put("sign_type", rsa2 ? "RSA2" : "RSA");
 
         keyValues.put("timestamp", getDateToString(payBean.getTime(), "yyyy-MM-dd HH:mm:ss"));
 
@@ -88,6 +88,7 @@ public class AliPayUtil {
      */
     public static String buildOrderParam(Map<String, String> map) {
         List<String> keys = new ArrayList<String>(map.keySet());
+        Collections.sort(keys);
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < keys.size() - 1; i++) {
@@ -132,14 +133,31 @@ public class AliPayUtil {
     /**
      * 将订单信息签名，encode
      *
-     * @param orderParam 待签名的订单信息
+     * @param map 待签名的订单信息
      * @param rsaKey     支付宝私钥
      * @param rsa2       是否使用RSA2签名算法
      * @return
      */
-    public static String getSign(String orderParam, String rsaKey, boolean rsa2) {
+    public static String getSign(Map<String, String> map, String rsaKey, boolean rsa2) {
+
+        List<String> keys = new ArrayList<String>(map.keySet());
+        // key排序
+        Collections.sort(keys);
+
+        StringBuilder authInfo = new StringBuilder();
+        for (int i = 0; i < keys.size() - 1; i++) {
+            String key = keys.get(i);
+            String value = map.get(key);
+            authInfo.append(buildKeyValue(key, value, false));
+            authInfo.append("&");
+        }
+
+        String tailKey = keys.get(keys.size() - 1);
+        String tailValue = map.get(tailKey);
+        authInfo.append(buildKeyValue(tailKey, tailValue, false));
+
         //将排序后的序列进行签名
-        String oriSign = sign(orderParam, rsaKey, rsa2);
+        String oriSign = sign(authInfo.toString(), rsaKey, rsa2);
         String encodedSign = "";
 
         try {
