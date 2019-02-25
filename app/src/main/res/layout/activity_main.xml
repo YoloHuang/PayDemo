@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.yolo.paydemo.MainActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/amount"
+        android:hint="@string/amount_hint"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:singleLine="true"
+        android:inputType="number"
+        android:textSize="16sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/describe"
+        android:hint="@string/des_hint"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:singleLine="true"
+        android:layout_below="@id/amount"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:id="@+id/card_pay"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_below="@id/describe"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/card_shadow">
+
+        <RelativeLayout
+            android:id="@+id/rl_wechatPay"
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+
+            <ImageView
+                android:id="@+id/iv_wechat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_wechat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/iv_wechat"
+                android:text="微信"
+                android:textColor="#FF00014B"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_aliPay"
+            android:layout_width="match_parent"
+            android:layout_height="78dp"
+            android:layout_marginTop="78dp">
+
+            <ImageView
+                android:id="@+id/iv_ali"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_alipay" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="16dp"
+                android:layout_toRightOf="@+id/iv_ali"
+                android:text="支付宝"
+                android:textColor="#FF00014B"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

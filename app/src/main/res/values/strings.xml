@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PayDemo</string>
+    <string name="amount_hint">请输入订单金额，单位分（不输入默认为1分）</string>
+    <string name="des_hint">请输入订单描述（不输入默认为订单测试）</string>
+</resources>
