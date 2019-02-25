@@ -141,9 +141,26 @@ allprojects {
      * @param rsa2   是否使用RSA2签名算法
      * @return
      */
-    public static String getSign(String orderParam, String rsaKey, boolean rsa2) {
+    public static String getSign(Map<String, String> map, String rsaKey, boolean rsa2) {
+
+        List<String> keys = new ArrayList<String>(map.keySet());
+        // key排序
+        Collections.sort(keys);
+
+        StringBuilder authInfo = new StringBuilder();
+        for (int i = 0; i < keys.size() - 1; i++) {
+            String key = keys.get(i);
+            String value = map.get(key);
+            authInfo.append(buildKeyValue(key, value, false));
+            authInfo.append("&");
+        }
+
+        String tailKey = keys.get(keys.size() - 1);
+        String tailValue = map.get(tailKey);
+        authInfo.append(buildKeyValue(tailKey, tailValue, false));
+
         //将排序后的序列进行签名
-        String oriSign = sign(orderParam, rsaKey, rsa2);
+        String oriSign = sign(authInfo.toString(), rsaKey, rsa2);
         String encodedSign = "";
 
         try {
